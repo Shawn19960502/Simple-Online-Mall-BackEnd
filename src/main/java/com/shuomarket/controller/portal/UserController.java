@@ -27,7 +27,7 @@ public class UserController {
      * @param username: username
      * @param password: password
      * @param session: session
-     * @return
+     * @return response
      */
     @RequestMapping(value = "login.do", method = RequestMethod.POST)
     @ResponseBody
@@ -38,5 +38,40 @@ public class UserController {
             session.setAttribute(Const.CURRENT_USER, response.getData());
         }
         return response;
+    }
+
+    /**
+     * user log out
+     * @param session: session
+     * @return server response.
+     */
+    @RequestMapping(value = "logout.do", method = RequestMethod.POST)
+    @ResponseBody
+    public ServerResponse<String> logout(HttpSession session) {
+        session.removeAttribute(Const.CURRENT_USER);
+        return ServerResponse.createBySuccess();
+    }
+
+    /**
+     * register new user.
+     * @param user user
+     * @return response
+     */
+    @RequestMapping(value = "register.do", method = RequestMethod.POST)
+    @ResponseBody
+    public ServerResponse<String> register(User user) {
+        return iUserService.register(user);
+    }
+
+    /**
+     * check valid.
+     * @param str string
+     * @param type type
+     * @return response.
+     */
+    @RequestMapping(value = "checkValid.do", method = RequestMethod.POST)
+    @ResponseBody
+    public ServerResponse<String> checkValid(String str, String type) {
+        return iUserService.checkValid(str, type);
     }
 }
