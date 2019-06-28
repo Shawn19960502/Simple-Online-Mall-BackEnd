@@ -4,6 +4,7 @@ import com.shuomarket.common.Const;
 import com.shuomarket.common.ServerResponse;
 import com.shuomarket.pojo.User;
 import com.shuomarket.service.IUserService;
+import net.sf.jsqlparser.schema.Server;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -73,5 +74,44 @@ public class UserController {
     @ResponseBody
     public ServerResponse<String> checkValid(String str, String type) {
         return iUserService.checkValid(str, type);
+    }
+
+    /**
+     * get user info message
+     * @param session http session
+     * @return response.
+     */
+    @RequestMapping(value = "get_user_info.do", method = RequestMethod.POST)
+    @ResponseBody
+    public ServerResponse<User> getUserInfo(HttpSession session) {
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        if(user != null) {
+            return ServerResponse.createBySuccess(user);
+        }
+        return ServerResponse.createByErrorMessage("Can't get current user message!");
+    }
+
+    /**
+     * get question to reset password when loss password.
+     * @param username username;
+     * @return response.
+     */
+    @RequestMapping(value = "forget_get_question.do", method = RequestMethod.POST)
+    @ResponseBody
+    public ServerResponse<String> forgetGetQuestion(String username) {
+        return iUserService.selectQuestion(username);
+    }
+
+    /**
+     * check answer to the safe question.
+     * @param username username.
+     * @param question question.
+     * @param answer answer.
+     * @return
+     */
+    @RequestMapping(value = "forget_check_answer.do", method = RequestMethod.POST)
+    @ResponseBody
+    public ServerResponse<String> forgetCheckAnswer(String username, String question, String answer) {
+        return iUserService.checkAnswer(username, question, answer);
     }
 }
