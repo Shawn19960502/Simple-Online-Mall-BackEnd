@@ -107,11 +107,24 @@ public class UserController {
      * @param username username.
      * @param question question.
      * @param answer answer.
-     * @return
+     * @return response.
      */
     @RequestMapping(value = "forget_check_answer.do", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> forgetCheckAnswer(String username, String question, String answer) {
         return iUserService.checkAnswer(username, question, answer);
+    }
+
+    /**
+     * reset password
+     * @param username username.
+     * @param passwordNew question.
+     * @param forgetToken forgetToken.
+     * @return response.
+     */
+    @RequestMapping(value = "forget_reset_password.do", method = RequestMethod.POST)
+    @ResponseBody
+    public ServerResponse<String> forgetSetPassword(String username, String passwordNew, String forgetToken) {
+        return iUserService.forgetRessetPassword(username, passwordNew, forgetToken);
     }
 }

@@ -101,11 +101,37 @@ public class UserServiceImpl implements IUserService {
         int resultCount = userMapper.checkAnswer(username, question, answer);
         if(resultCount > 0) {
             String forgetToken = UUID.randomUUID().toString();
-            TokenCache.setKey("token_" + username, forgetToken);
+            TokenCache.setKey(TokenCache.TOKEN_PREFIX + username, forgetToken);
             return ServerResponse.createBySuccess(forgetToken);
         }
         return ServerResponse.createByErrorMessage("Answer to Question is not correct");
 
+    }
+
+    @Override
+    public ServerResponse<String> forgetRessetPassword(String username, String passwordNew, String forgetToken) {
+        if(StringUtils.isBlank(forgetToken)) {
+            return ServerResponse.createByErrorMessage("Token is not passed.");
+        }
+        ServerResponse validResponse = this.checkValid(username, Const.USERNAME);
+        if(validResponse.isSuccess()) {
+            return ServerResponse.createByErrorMessage("User does not exist!");
+        }
+
+        String token = TokenCache.getKey(TokenCache.TOKEN_PREFIX+ username);
+        if(StringUtils.isBlank(token)) {
+            return ServerResponse.createByErrorMessage("Token is invalid");
+        }
+        if(StringUtils.equals(forgetToken, token)) {
+            String md5Password = MD5Util.MD5EncodeUtf8(passwordNew);
+            int rowCount = userMapper.updatePasswordByUsername(username, md5Password);
+            if(rowCount > 0) {
+                return ServerResponse.createBySuccessMessage("Update password successfully");
+            }
+        } else {
+            return ServerResponse.createByErrorMessage("Token is invalid");
+        }
+        return ServerResponse.createByErrorMessage("Update password failed");
     }
 }
 
