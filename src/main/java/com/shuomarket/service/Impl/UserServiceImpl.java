@@ -138,7 +138,7 @@ public class UserServiceImpl implements IUserService {
     public ServerResponse<String> resetPassword(String passWordOld, String passWordNew, User user) {
         int resultCount = userMapper.checkPassword(MD5Util.MD5EncodeUtf8(passWordOld), user.getId());
         if(resultCount == 0) {
-            return ServerResponse.createByErrorMessage("Old password is not corrent");
+            return ServerResponse.createByErrorMessage("Old password is not correct");
         } else {
             user.setPassword(MD5Util.MD5EncodeUtf8(passWordNew));
             int updateCount = userMapper.updateByPrimaryKeySelective(user);
@@ -148,6 +148,37 @@ public class UserServiceImpl implements IUserService {
                 return ServerResponse.createByErrorMessage("update failed");
             }
         }
+    }
+
+    @Override
+    public ServerResponse<User> updateInformation(User user) {
+        int resultCount = userMapper.checkEmailByUserId(user.getEmail(), user.getId());
+        if(resultCount > 0) {
+            return ServerResponse.createByErrorMessage("Email already exists!");
+        }
+        User updateUser = new User();
+        updateUser.setId(user.getId());
+        updateUser.setEmail(user.getEmail());
+        updateUser.setPhone(user.getPhone());
+        updateUser.setQuestion(user.getQuestion());
+        updateUser.setAnswer(user.getAnswer());
+        int updateCount = userMapper.updateByPrimaryKeySelective(updateUser);
+
+        if(updateCount > 0) {
+            return ServerResponse.createBySuccess( updateUser,"update successfully!");
+        } else {
+            return ServerResponse.createByErrorMessage("update failed");
+        }
+    }
+
+    @Override
+    public ServerResponse<User> getInformation(Integer userId) {
+        User user = userMapper.selectByPrimaryKey(userId);
+        if(user == null) {
+            return ServerResponse.createByErrorMessage("Can't find user");
+        }
+        user.setPassword(StringUtils.EMPTY);
+        return ServerResponse.createBySuccess(user);
     }
 }
 

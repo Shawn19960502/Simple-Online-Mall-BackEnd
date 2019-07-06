@@ -1,6 +1,7 @@
 package com.shuomarket.controller.portal;
 
 import com.shuomarket.common.Const;
+import com.shuomarket.common.ResponseCode;
 import com.shuomarket.common.ServerResponse;
 import com.shuomarket.pojo.User;
 import com.shuomarket.service.IUserService;
@@ -143,5 +144,42 @@ public class UserController {
             return ServerResponse.createByErrorMessage("log out");
         }
         return iUserService.resetPassword(oldPassword, newPassword, user);
+    }
+
+    /**
+     *  update user information.
+     * @param session session.
+     * @param user user.
+     * @return ServerResponse
+     */
+    @RequestMapping(value = "update_information.do", method = RequestMethod.POST)
+    @ResponseBody
+    public ServerResponse<User> updateInformation(HttpSession session, User user) {
+        User currentUser = (User)session.getAttribute(Const.CURRENT_USER);
+        if(currentUser == null) {
+            return ServerResponse.createByErrorMessage("log out");
+        }
+        user.setId(currentUser.getId());
+        ServerResponse<User> response = iUserService.updateInformation(user);
+        if(response.isSuccess()) {
+            session.setAttribute(Const.CURRENT_USER, response.getData());
+        }
+        return response;
+    }
+
+    /**
+     *  get information
+     * @param session session.
+     * @return serverResponse
+     */
+    @RequestMapping(value = "get_information.do", method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse<User> getInformation(HttpSession session) {
+        User currentUser = (User)session.getAttribute(Const.CURRENT_USER);
+        if(currentUser == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "need login");
+        }
+        return iUserService.getInformation(currentUser.getId());
+
     }
 }
