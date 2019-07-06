@@ -195,4 +195,15 @@
     where
     username = #{username}
   </update>
+
+  <select id="checkPassword" resultType="int" parameterType="map">
+    select
+    count(1)
+    from
+    mmall_user
+    where
+    id = #{userId}
+    and
+    password = #{password}
+  </select>
 </mapper>
