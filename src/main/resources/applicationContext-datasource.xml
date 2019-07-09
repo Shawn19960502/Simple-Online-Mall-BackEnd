@@ -25,10 +25,10 @@
 
 
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-        <property name="driverClassName" value="${db.driverClassName}"/>
-        <property name="url" value="${db.url}"/>
-        <property name="username" value="${db.username}"/>
-        <property name="password" value="${db.password}"/>
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://172.16.64.247:3306/shuomarket?characterEncoding=utf-8"/>
+        <property name="username" value="shuomarket"/>
+        <property name="password" value="12345678"/>
         <!-- 连接池启动时的初始值 -->
         <property name="initialSize" value="${db.initialSize}"/>
         <!-- 连接池的最大值 -->

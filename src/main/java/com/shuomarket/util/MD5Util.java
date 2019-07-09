@@ -7,6 +7,8 @@ import java.security.MessageDigest;
  */
 public class MD5Util {
 
+    private static final String SALT = "Shawn_Yang@##12#$";
+
     private static String byteArrayToHexString(byte b[]) {
         StringBuffer resultSb = new StringBuffer();
         for (int i = 0; i < b.length; i++)
@@ -46,6 +48,7 @@ public class MD5Util {
     }
 
     public static String MD5EncodeUtf8(String origin) {
+        origin = origin + SALT;
         return MD5Encode(origin, "utf-8");
     }
 
