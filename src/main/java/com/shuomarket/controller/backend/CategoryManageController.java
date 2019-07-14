@@ -54,9 +54,40 @@ public class CategoryManageController {
                     "user has not login, please login first!");
         }
         if(iUserService.checkAdminRole(user).isSuccess()){
-            return iCategoryService.updateCategoryName(categoryId,categoryName);
-        }else{
+            return iCategoryService.updateCategoryName(categoryId, categoryName);
+        } else {
             return ServerResponse.createByErrorMessage("Not authorized");
+        }
+    }
+
+    @RequestMapping("get_category.do")
+    @ResponseBody
+    public ServerResponse getChildrenParallelCategory(HttpSession session,@RequestParam(value = "categoryId" ,defaultValue = "0") Integer categoryId){
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        if(user == null){
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),
+                    "User is not login, Please login first");
+        }
+        if(iUserService.checkAdminRole(user).isSuccess()){
+            return iCategoryService.getChildrenParallelCategory(categoryId);
+        }else{
+            return ServerResponse.createByErrorMessage("Not Authorized.");
+        }
+    }
+
+    @RequestMapping("get_deep_category.do")
+    @ResponseBody
+    public ServerResponse getCategoryAndDeepChildrenCategory(HttpSession session,@RequestParam(value = "categoryId" ,defaultValue = "0") Integer categoryId){
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        if(user == null){
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录,请登录");
+        }
+        if(iUserService.checkAdminRole(user).isSuccess()){
+
+            return iCategoryService.selectCategoryAndChildrenById(categoryId);
+
+        }else{
+            return ServerResponse.createByErrorMessage("Not Authorized.");
         }
     }
 
