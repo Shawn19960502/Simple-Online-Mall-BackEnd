@@ -78,20 +78,25 @@ public class FTPUtil {
     public static boolean uploadFile(List<File> fileList) throws IOException {
         FTPUtil ftpUtil = new FTPUtil(ftpIp,21,ftpUser,ftpPass);
         logger.info("Start to connect to fpt server");
-        boolean result = ftpUtil.uploadFile("img",fileList);
+        boolean result = ftpUtil.uploadFile("files",fileList);
         logger.info("upload result:{}", result);
         return result;
     }
 
     private boolean uploadFile(String remotePath,List<File> fileList) throws IOException {
-        boolean uploaded = true;
+        boolean uploaded = false;
         FileInputStream fis = null;
         if(connectServer(this.ip, this.port, this.user, this.pwd)){
+            uploaded = true;
             try {
                 ftpClient.changeWorkingDirectory(remotePath);
                 ftpClient.setBufferSize(1024);
                 ftpClient.setControlEncoding("UTF-8");
                 ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);
+//                ftpClient.enterRemotePassiveMode();
+                ftpClient.setFileTransferMode(FTPClient.BINARY_FILE_TYPE);
+//                ftpClient.enterLocalPassiveMode();
+
                 ftpClient.enterLocalPassiveMode();
                 for(File fileItem : fileList){
                     fis = new FileInputStream(fileItem);
