@@ -16,6 +16,14 @@ public class Const {
         Set<String> PRICE_ASC_DESC = Sets.newHashSet("price_desc","price_asc");
     }
 
+    public interface Cart{
+        int CHECKED = 1;
+        int UN_CHECKED = 0;
+
+        String LIMIT_NUM_FAIL = "LIMIT_NUM_FAIL";
+        String LIMIT_NUM_SUCCESS = "LIMIT_NUM_SUCCESS";
+    }
+
     public static final String USERNAME="username";
     public interface Role {
         int ROLE_CUSMTER = 0; // normal user.
