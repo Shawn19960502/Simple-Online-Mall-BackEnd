@@ -77,29 +77,24 @@ public class CartServiceImpl implements ICartService {
                     cartProductVo.setProductStatus(product.getStatus());
                     cartProductVo.setProductPrice(product.getPrice());
                     cartProductVo.setProductStock(product.getStock());
-                    //判断库存
                     int buyLimitCount = 0;
                     if(product.getStock() >= cartItem.getQuantity()){
-                        //库存充足的时候
                         buyLimitCount = cartItem.getQuantity();
                         cartProductVo.setLimitQuantity(Const.Cart.LIMIT_NUM_SUCCESS);
                     }else{
                         buyLimitCount = product.getStock();
                         cartProductVo.setLimitQuantity(Const.Cart.LIMIT_NUM_FAIL);
-                        //购物车中更新有效库存
                         Cart cartForQuantity = new Cart();
                         cartForQuantity.setId(cartItem.getId());
                         cartForQuantity.setQuantity(buyLimitCount);
                         cartMapper.updateByPrimaryKeySelective(cartForQuantity);
                     }
                     cartProductVo.setQuantity(buyLimitCount);
-                    //计算总价
                     cartProductVo.setProductTotalPrice(BigDecimalUtil.mul(product.getPrice().doubleValue(),cartProductVo.getQuantity()));
                     cartProductVo.setProductChecked(cartItem.getChecked());
                 }
 
                 if(cartItem.getChecked() == Const.Cart.CHECKED){
-                    //如果已经勾选,增加到整个的购物车总价中
                     cartTotalPrice = BigDecimalUtil.add(cartTotalPrice.doubleValue(),cartProductVo.getProductTotalPrice().doubleValue());
                 }
                 cartProductVoList.add(cartProductVo);
