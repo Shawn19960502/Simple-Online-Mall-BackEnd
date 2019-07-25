@@ -46,4 +46,67 @@ public class Const {
             return code;
         }
     }
+
+    public enum OrderStatusEnum{
+        CANCELED(0,"Cancelled"),
+        NO_PAY(10,"Not Payed"),
+        PAID(20,"payed"),
+        SHIPPED(40,"on the way"),
+        ORDER_SUCCESS(50,"finish"),
+        ORDER_CLOSE(60,"close");
+
+
+        OrderStatusEnum(int code,String value){
+            this.code = code;
+            this.value = value;
+        }
+        private String value;
+        private int code;
+
+        public String getValue() {
+            return value;
+        }
+
+        public int getCode() {
+            return code;
+        }
+
+        public static OrderStatusEnum codeOf(int code){
+            for(OrderStatusEnum orderStatusEnum : values()){
+                if(orderStatusEnum.getCode() == code){
+                    return orderStatusEnum;
+                }
+            }
+            throw new RuntimeException("no corresponding enum");
+        }
+    }
+
+    public enum PaymentTypeEnum{
+        ONLINE_PAY(1,"Only Pay");
+
+        PaymentTypeEnum(int code,String value){
+            this.code = code;
+            this.value = value;
+        }
+        private String value;
+        private int code;
+
+        public String getValue() {
+            return value;
+        }
+
+        public int getCode() {
+            return code;
+        }
+
+
+        public static PaymentTypeEnum codeOf(int code){
+            for(PaymentTypeEnum paymentTypeEnum : values()){
+                if(paymentTypeEnum.getCode() == code){
+                    return paymentTypeEnum;
+                }
+            }
+            throw new RuntimeException("No corresponding enum");
+        }
+    }
 }
