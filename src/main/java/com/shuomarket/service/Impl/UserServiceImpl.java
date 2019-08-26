@@ -22,7 +22,7 @@ public class UserServiceImpl implements IUserService {
     public ServerResponse<User> login(String username, String password) {
         int resultCount = userMapper.checkUsername(username);
         if(resultCount == 0) {
-            return ServerResponse.createByErrorMessage("User name is not exist!");
+            return ServerResponse.createByErrorMessage("User name does not exist!");
         }
         String md5Password = MD5Util.MD5EncodeUtf8(password);
 

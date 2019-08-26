@@ -17,6 +17,7 @@ import javax.servlet.http.HttpSession;
 /**
  * Created by Shawn
  */
+
 @Controller
 @RequestMapping("/user/")
 public class UserController {
@@ -35,6 +36,7 @@ public class UserController {
     @ResponseBody
     public ServerResponse<User> login(String username, String password, HttpSession session) {
         //service: mybatis.dao
+        System.out.println("Login Session ID is " + session.getId());
         ServerResponse<User> response = iUserService.login(username, password);
         if(response.isSuccess()) {
             session.setAttribute(Const.CURRENT_USER, response.getData());
@@ -82,9 +84,10 @@ public class UserController {
      * @param session http session
      * @return response.
      */
-    @RequestMapping(value = "get_user_info.do", method = RequestMethod.POST)
+    @RequestMapping(value = "get_user_info.do", method = RequestMethod.GET)
     @ResponseBody
     public ServerResponse<User> getUserInfo(HttpSession session) {
+        System.out.println("Get user info user id is " + session.getId());
         User user = (User)session.getAttribute(Const.CURRENT_USER);
         if(user != null) {
             return ServerResponse.createBySuccess(user);
@@ -139,6 +142,9 @@ public class UserController {
     @RequestMapping(value = "reset_password.do", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> resetPassword(HttpSession session, String oldPassword, String newPassword) {
+        System.out.println(oldPassword);
+        System.out.println(newPassword);
+        System.out.println(session.getId());
         User user = (User)session.getAttribute(Const.CURRENT_USER);
         if(user == null) {
             return ServerResponse.createByErrorMessage("log out");
